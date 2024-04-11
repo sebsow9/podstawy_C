@@ -11,51 +11,25 @@ int main(void){
     int size;
     int eofEncountered = 0;
     int i = 1;
+    int operation_number[6];
+    printf("Podaj elementy tablicy A i B oraz numer operacji: \n");
     while (!eofEncountered && i <= 6){
-        switch (i)
-        {
-        case 1:
-            printf("\nOperacja numer 1\n");
-            A_B_list[i-1] = read(&eofEncountered);
-            break;
-        case 2:
-            printf("\nOperacja numer 2\n");
-            A_B_list[i-1] = read(&eofEncountered);
-            break;
-        case 3:
-            printf("\nOperacja numer 3\n");
-            A_B_list[i-1] = read(&eofEncountered);
-            break;
-        case 4:
-            printf("\nOperacja numer 4\n");
-            A_B_list[i-1] = read(&eofEncountered);
-            break;
-        case 5:
-            printf("\nOperacja numer 5\n");
-            A_B_list[i-1] = read(&eofEncountered);
-            break;
-        case 6:
-            printf("\nOperacja numer 6\n");
-            A_B_list[i-1] = read(&eofEncountered);
-            break;
-        default:
-            break;
-        }
+
+        A_B_list[i-1] = read(&operation_number[i-1], &eofEncountered);
         i++;
         }
         for (int j=0; j<=i-1;j++){
-            switch (j){
-            case 0:
-                result_list[0] = suma(A_B_list[0][0], A_B_list[0][1]);
-                result_sizes[0] = size;
+            switch (operation_number[j]){
+            case 1:
+                result_list[0] = suma(A_B_list[j][0], A_B_list[j][1]);
                 printf("\nWynik 1 operacji: ");
                 for(int y = 0; y<MAX_SIZE*2; y++){
                     printf(" %d", result_list[0][y]);
                 }
                 
                 break;
-            case 1:
-                result_list[1] = common_part(A_B_list[1][0], A_B_list[1][1], &size);
+            case 2:
+                result_list[1] = common_part(A_B_list[j][0], A_B_list[j][1], &size);
                 result_sizes[1] = size;
                 printf("\nWynik 2 operacji: ");
                 for(int f = 0; f<result_sizes[1]; f++){
@@ -63,8 +37,8 @@ int main(void){
                 }
                 
                 break;
-            case 2:
-                result_list[2] = difference(A_B_list[2][0], A_B_list[2][1], &size);
+            case 3:
+                result_list[2] = difference(A_B_list[j][0], A_B_list[j][1], &size);
                 result_sizes[2] = size;
                 printf("\nWynik 3 operacji: ");
                 for(int h = 0; h<result_sizes[2]; h++){
@@ -72,8 +46,8 @@ int main(void){
                 }
                 
                 break;
-            case 3:
-                result_list[3] = sym_diff(A_B_list[3][0], A_B_list[3][1], &size);
+            case 4:
+                result_list[3] = sym_diff(A_B_list[j][0], A_B_list[j][1], &size);
                 result_sizes[3] = size;
                 printf("\nWynik 4 operacji: ");
                 for(int k = 0; k<result_sizes[3]; k++){
@@ -81,8 +55,8 @@ int main(void){
                 }
                 
                 break;
-            case 4:
-                result_bool[0] = is_equal(A_B_list[4][0], A_B_list[4][1]);
+            case 5:
+                result_bool[0] = is_equal(A_B_list[j][0], A_B_list[j][1]);
                 printf("\nWynik 5 operacji: ");
                 if (result_bool[0] == true){
                     printf(" Tablice sa rowne");
@@ -91,8 +65,8 @@ int main(void){
                     printf(" Tablice nie sa rowne");
                 }
                 break;
-            case 5:
-                int relation = checkSetsRelation(A_B_list[5][0], A_B_list[5][1]);
+            case 6:
+                int relation = checkSetsRelation(A_B_list[j][0], A_B_list[j][1]);
                 printf("\nWynik 6 operacji: ");
                 switch (relation)
                 {
