@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 
 int divideAndRoundUp(int numerator, int denominator) {
@@ -60,6 +61,7 @@ void heapify(int* tab, int size){
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
     int trackingEnabled = 0;
 
     for (int i = 1; i < argc; i++) {
@@ -152,7 +154,7 @@ int main(int argc, char *argv[])
             for(int f=0; f<N-i-1; f++){
                     printf("   ");
                 }
-            for(int j=0; j<=i; j++){
+            for(int j=i; j>=0; j--){
                 
                 if(sorted[j]>=0){
                     printf(" %d ", sorted[j]);
