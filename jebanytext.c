@@ -1,48 +1,264 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <regex.h>
 
-#define MAX_LINES 1000
-#define MAX_LINE_LENGTH 100
+
+
+#define BUFFER_SIZE 1024
+
+
+void bubbleSort(char* arr[], int n) {
+    int i, j; 
+    char* temp = NULL;
+    for (i = 0; i < n-1; i++) {
+        
+        for (j = 1; j < n-i-1; j++) {
+            if (((int) arr[j][0]) > ( (int) arr[j+1][0])) {
+                
+                temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}
+
+
+void sort(char tab[], int index){
+    char* line[BUFFER_SIZE];
+    int line_index = 0;
+    int current_line = 0;
+
+    line[current_line] = malloc(BUFFER_SIZE);
+
+        if(line[current_line] == NULL){
+            printf("Critical error");
+        }
+
+        for (int i = 0; i <= index; i++){
+
+            if(tab[i] == '\n' || tab[i] == '\0'){
+
+                line[current_line][line_index] = '\0';
+
+                if(tab[i] == '\n' && i != index -1){
+
+                    current_line++;
+                    line_index = 0;
+
+                    line[current_line] = malloc(BUFFER_SIZE);
+
+                    if(line[current_line] == NULL) {
+                        printf("Critical error");
+                        break;
+                        }
+
+
+                }
+            }
+
+            else{
+
+                line[current_line][line_index++] = tab[i];
+
+            }
+        }
+
+    int i=0;
+    int j=0;/* tu jest ile slow ma 1 wiersz*/
+    char words_1line[15][15];
+    while (line[0][i] != '\0')
+    {
+        if(line[0][i] == ' '){
+            j++;
+            i++;
+        }
+        else{
+            words_1line[j][i] = line[0][i];
+            i++;
+        }  
+    }
+    if (j == 0){
+
+        bubbleSort(line, current_line + 1);
+        for(int i = 1; i<=current_line; i++){
+            
+            printf("%s\n", line[i]);
+
+        }
+    }
+    
+
+
+
+    /*
+    char words[15][7] = {};
+    int i =1;
+    int j = 0;
+    int k = 0;
+    while (line[i][k] != '\0'){
+        
+        words[j][k] = line[k];
+        k++;
+        if(line[i] == ' '){
+            words[j][k-1] = '\0';
+            j++;
+            i++;
+            k=0; 
+        }
+        else if(line[i][k] == '\n'){
+            i++;
+            k=0;
+        } 
+    }
+    */
+    
+    for (int i = 0; i <= current_line; i++) {
+
+            free(line[i]);
+
+        }
+
+}
+
+
+
+int fun_define(char* tab){
+    
+    regex_t regex;
+    int ret;
+    char words[15][7] = {};
+    int i =0;
+    int j =0;
+    int k = 0;
+    while (tab[i] != '\0'){
+        
+        words[j][k] = tab[i];
+        i++;
+        k++;
+        if(tab[i] == ' '){
+            words[j][k-1] = '\0';
+            j++;
+            i++;
+            k=0; 
+        } 
+    }
+    ret = regcomp(&regex, words[0], 0);
+    if (ret != 0) {
+        char error_message[100];
+        regerror(ret, &regex, error_message, sizeof(error_message));
+        printf("Regex compilation failed: %s\n", error_message);
+        return -1;
+    }
+
+    ret = regexec(&regex, "grep", 0, NULL, 0);
+    if (ret == 0) {
+        regfree(&regex);
+        return 1;
+    }
+
+    ret = regexec(&regex, "tail", 0, NULL, 0);
+    if (ret == 0) {
+        regfree(&regex);
+        return 2;
+    }
+
+    ret = regexec(&regex, "sort", 0, NULL, 0);
+    if (ret == 0) {
+        regfree(&regex);
+        return 3;
+    }
+
+    
+    regfree(&regex);
+    
+    printf("No pattern found\n");
+    return -1;
+}
+
+
 
 
 int main(){
-    FILE *file;
-    char buffer[MAX_LINE_LENGTH];
-    char *lines[MAX_LINES];
-    int line_count = 0;
-    file = fopen("maka.txt", "r");
-    if (file == NULL){
-        perror("Error opening file");
-        return -1;
-    }
-    
-    while (fgets(buffer, sizeof(buffer), file) != NULL){
-        lines[line_count] = (char *)malloc(MAX_LINE_LENGTH * sizeof(char));
+    char buffer[BUFFER_SIZE];
+    char* line[BUFFER_SIZE];
+    int line_index;
+    int current_line;
+    int index;
+    while(1){
+        line_index = 0;
+        current_line = 0;
+        index = 0;
+        printf("Podaj komende: \n");
+        
 
-
-        int i = 0;
-        while (buffer[i] != '\0' && buffer[i] != '\n' && i <MAX_LINE_LENGTH){
-            lines[line_count][i] = buffer[i];
-            i++;
+        int ch = 0;
+        while(index < BUFFER_SIZE - 1 && (ch=getchar()) != EOF){
+            buffer[index++] = (char)ch;
         }
-
-        lines[line_count][i] = '\0';
-        line_count++;
-
-        if(line_count >= MAX_LINES){
-            printf("Maximum reached");
+        buffer[index] = '\0';
+        if(index == 0 && ch == EOF){
+            printf("Koniec programu!\n");
             break;
         }
+        
+        
+        line[current_line] = malloc(BUFFER_SIZE);
+
+        if(line[current_line] == NULL) return -1;
+
+        for (int i = 0; i <= index; i++){
+
+            if(buffer[i] == '\n' || buffer[i] == '\0'){
+
+                line[current_line][line_index] = '\0';
+
+                if(buffer[i] == '\n' && i != index -1){
+
+                    current_line++;
+                    line_index = 0;
+
+                    line[current_line] = malloc(BUFFER_SIZE);
+
+                    if(line[current_line] == NULL) return -1;
+
+                }
+            }
+
+            else{
+
+                line[current_line][line_index++] = buffer[i];
+
+            }
+        }
+        int function = fun_define(line[0]);
+        switch (function){
+            case -1:
+                break;
+            case 1:
+                printf("\nGrep\n");
+                break;
+            case 2:
+                printf("\nTail\n");
+                break;
+            case 3:
+                printf("\nSort\n");
+                sort(buffer, index);
+                break;
+
+
+        }
+        for (int i = 0; i <= current_line; i++) {
+
+            free(line[i]);
+
+        }
+        
+        clearerr(stdin);
+
     }
     
 
-
-    for (int i = 0; i< line_count; i++){
-        printf("%s", lines[i]);
-        free(lines[i]);
-    }
     
-    
-    fclose(file);
     return 0;
 }
