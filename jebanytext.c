@@ -1,19 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <regex.h>
+#include <string.h>
 
 
 
 #define BUFFER_SIZE 1024
 
 
-void bubbleSort(char* arr[], int n) {
+void bubbleSort(char* arr[], int n, int index) {
     int i, j; 
     char* temp = NULL;
     for (i = 0; i < n-1; i++) {
         
         for (j = 1; j < n-i-1; j++) {
-            if (((int) arr[j][0]) > ( (int) arr[j+1][0])) {
+            if (((int) arr[j][index]) > ( (int) arr[j+1][index])) {
                 
                 temp = arr[j];
                 arr[j] = arr[j+1];
@@ -66,52 +67,70 @@ void sort(char tab[], int index){
 
     int i=0;
     int j=0;/* tu jest ile slow ma 1 wiersz*/
+    int k =0;
     char words_1line[15][15];
+    int words_len[3];
     while (line[0][i] != '\0')
     {
         if(line[0][i] == ' '){
+            words_len[j] = k-1;
             j++;
             i++;
+            
+            k=0;
+            
         }
         else{
-            words_1line[j][i] = line[0][i];
+            words_1line[j][k] = line[0][i];
             i++;
+            k++;
         }  
     }
+    words_len[j] = k-1;
     if (j == 0){
 
-        bubbleSort(line, current_line + 1);
+        bubbleSort(line, current_line + 1, 0);
         for(int i = 1; i<=current_line; i++){
-            
+
             printf("%s\n", line[i]);
 
         }
     }
+    if (j == 1){
+        regex_t regex;
+        int ret;
+        ret = regcomp(&regex, "-k[[:digit:]]+", REG_EXTENDED);
+        
+        ret = regexec(&regex, line[0], 0, NULL, 0);
+        if(ret == 0){
+            int k = words_len[1];
+            char temp[k];
+            int i = 0;
+            while (i+1 != k)
+            {   
+                temp[i] = words_1line[1][i+2];
+                i++;
+            }
+            int number = atoi(temp);
+
+            bubbleSort(line, current_line + 1, number-1);
+            
+            for(int i = 1; i<=current_line; i++){
+
+                printf("%s\n", line[i]);
+
+            }
+        }
+
+
+            
+
+        
+
+        regfree(&regex);
+    }
     
 
-
-
-    /*
-    char words[15][7] = {};
-    int i =1;
-    int j = 0;
-    int k = 0;
-    while (line[i][k] != '\0'){
-        
-        words[j][k] = line[k];
-        k++;
-        if(line[i] == ' '){
-            words[j][k-1] = '\0';
-            j++;
-            i++;
-            k=0; 
-        }
-        else if(line[i][k] == '\n'){
-            i++;
-            k=0;
-        } 
-    }
-    */
     
     for (int i = 0; i <= current_line; i++) {
 
