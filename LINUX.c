@@ -184,27 +184,34 @@ void print_tail(char* tab[], int size, int start, char mode) {
 }
 void tail_function(char* tab[], int size) {
     char *options = tab[0];
-    int count = 10;  
-    char mode = 'n';  
+    int count = 10;  // Default line count if not specified
+    char mode = 'n'; // Default mode, show last 'n' lines
 
-    char *token = strtok(options, " ");
-    while (token) {
-        if (strcmp(token, "-n") == 0) {
-            token = strtok(NULL, " ");
-            count = atoi(token);
-            mode = 'n';
-        } else if (strcmp(token, "-c") == 0) {
-            token = strtok(NULL, " ");
-            count = atoi(token);
-            mode = 'c';
-        } else if (token[0] == '+') {
-            count = atoi(token + 1) - 1;  
-            mode = '+';
-        }
-        token = strtok(NULL, " ");
+    // Parse options, assuming the first element 'tab[0]' contains them
+    if (strncmp(options, "tail -n ", 8) == 0) {
+        count = atoi(options + 8); // Parse number directly after '-n'
+    } else if (strncmp(options, "tail -c ", 8) == 0) {
+        mode = 'c'; // Set mode to count characters instead
+        count = atoi(options + 8); // Parse number directly after '-c'
+    } else if (options[0] == '+') {
+        mode = '+'; // Set mode to start output from 'count' line
+        count = atoi(options + 1) - 1; // Parse number directly after '+', convert to 0-based index
     }
 
-    print_tail(tab + 1, size - 1, count, mode);  
+    // Based on mode, print lines or characters from tail
+    if (mode == 'n') {
+        int start = size - count;
+        if (start < 0) start = 0;
+        for (int i = start; i < size; i++) {
+            printf("%s\n", tab[i]);
+        }
+    } else if (mode == 'c') {
+        // Count and output characters: similar implementation needed
+    } else if (mode == '+') {
+        for (int i = count; i < size; i++) {
+            printf("%s\n", tab[i]);
+        }
+    }
 }
 
 
@@ -411,10 +418,44 @@ int fun_define(char* tab){
     return -1;
 }
 
+void run_tests() {
+    // Example Test for Grep
+    char *grep_lines[] = {
+        "grep -n test",
+        "This is a test",
+        "Another line",
+        "test again",
+        "no match"
+    };
+    printf("Testing Grep Function:\n");
+    grep_function(grep_lines, 4, "n", "test");  // Should print line numbers with 'test'
+
+    // Example Test for Tail
+    char *tail_lines[] = {
+        "tail -n 2",
+        "line 1",
+        "line 2",
+        "line 3"
+    };
+    printf("\nTesting Tail Function:\n");
+    tail_function(tail_lines, 4);  // Should print last two lines: "line 2" and "line 3"
+
+    // Example Test for Sort
+    char sort_input[] = "sort\n3 Banana\n1 Apple\n2 Cherry";
+    printf("\nTesting Sort Function:\n");
+    sort(sort_input, strlen(sort_input));  // Should sort the lines alphabetically
+}
 
 
 
-int main(){
+
+int main(int argc, char *argv[]){
+    if (argc>1 &&strcmp(argv[1], "test") == 0){
+        run_tests();
+    }
+    else{
+        printf("Normalne dzialanie progoramu: \n\n\n");
+    
     char buffer[BUFFER_SIZE];
     char* line[BUFFER_SIZE];
     int line_index;
@@ -496,6 +537,6 @@ int main(){
     }
     
 
-    
+    }
     return 0;
 }
