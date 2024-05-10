@@ -5,20 +5,24 @@
 
 
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 2048
 
 
-void bubbleSort(char* arr[], int n, int index) {
+void bubbleSort(char arr[][15][15], int n, int column) {
     int i, j; 
-    char* temp = NULL;
+    char temp[15];
     for (i = 0; i < n-1; i++) {
         
         for (j = 1; j < n-i-1; j++) {
-            if (((int) arr[j][index]) > ( (int) arr[j+1][index])) {
-                
-                temp = arr[j];
-                arr[j] = arr[j+1];
-                arr[j+1] = temp;
+            if (((int) arr[j][column][0]) > ( (int) arr[j+1][column][0])) {
+                printf("OK");
+                for (int k = 0; k <= column; k++) {
+                    strcpy(temp, arr[j][k]);
+                    printf(" TEMP %s", temp);
+                    strcpy(arr[j][k], arr[j + 1][k]);
+                    strcpy(arr[j + 1][k], temp);
+                    printf("%s", arr[j][k]);
+                }
             }
         }
     }
@@ -87,14 +91,71 @@ void sort(char tab[], int index){
         }  
     }
     words_len[j] = k-1;
-    if (j == 0){
-
-        bubbleSort(line, current_line + 1, 0);
-        for(int i = 1; i<=current_line; i++){
-
-            printf("%s\n", line[i]);
-
+    char words_row_column[15][15][15];
+    int column = 0;
+    int row = 0;
+    int letter = 0;
+    int h = 0;
+    while (tab[h] != '\0'){
+        
+        if(tab[h] == ' '){
+            
+            words_row_column[row][column][letter] = '\0';
+            column++;
+            letter=0;
+            h++;
         }
+        else if(tab[h] == '\n'){
+            
+            words_row_column[row][column][letter+1] = '\n';
+            words_row_column[row][column][letter] = '\0';  
+            row++;
+            column=0;
+            letter=0;
+            h++;
+            
+        }
+        else{
+            
+            words_row_column[row][column][letter] = tab[h];
+            h++;
+            letter++;
+        }   
+           
+    }
+
+    if (j == 0){
+        
+        bubbleSort(words_row_column, row, 0);
+        int b=0;
+        int c=0;
+        int flag;
+        for (int a = 0; a<row; a++){
+            b=0;
+            flag = 1;
+            while (flag !=0)
+            {
+                if(words_row_column[a][b][c] == '\0'){
+                    if(words_row_column[a][b][c+1] == '\n'){
+                        printf("\n");
+                        flag = 0;
+                    }
+                    b++;
+                    c=0;
+                }
+                else{
+                    printf("%c", words_row_column[a][b][c]);
+                    c++;
+                }
+            }
+            
+            
+        }
+
+        
+              
+
+        
     }
     if (j == 1){
         regex_t regex;
@@ -113,13 +174,29 @@ void sort(char tab[], int index){
             }
             int number = atoi(temp);
 
-            bubbleSort(line, current_line + 1, number-1);
+            bubbleSort(words_row_column, current_line + 1, number-1);
             
-            for(int i = 1; i<=current_line; i++){
 
-                printf("%s\n", line[i]);
-
+            int a = 0, b=0, c=0;
+            for (int a = 0; a<=row; a++){
+                b=0;
+                while (words_row_column[a][b][c] != '\n')
+                {
+                   if(words_row_column[a][b][c] == '\0'){
+                    b++;
+                    c=0;
+                   }
+                   else{
+                    printf("%c", words_row_column[a][b][c]);
+                    c++;
+                   }
+                }
             }
+                    
+                
+                    
+
+            
         }
 
 
