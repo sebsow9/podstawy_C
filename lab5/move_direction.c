@@ -1,5 +1,5 @@
 enum MoveDirection {
-    FORWARD = 1,
+    FORWARD,
     BACKWARD,
     RIGHT,
     LEFT

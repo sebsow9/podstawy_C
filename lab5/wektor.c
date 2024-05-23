@@ -10,7 +10,7 @@ struct Vector {
 };
 
 void Vector_toString(struct Vector vector){ /*Zwraca aktualne wartosci x,y przekazanej struktury vector */
-    printf("Pozycja: (%d, %d)", vector.x, vector.y);
+    printf("Pozycja: (%d, %d)\n\n", vector.x, vector.y);
 }
 
 bool Vector_precedes(struct Vector vector1, struct Vector vector2){ // sprawdza czy vector 1 ma obydwie mniejsze lub rowne wartosci
@@ -48,7 +48,6 @@ struct Vector Vector_opposite(struct Vector vector){ //zwraca wektory obrocony o
 
 bool Vector_equals(struct Vector vector1, struct Vector vector2){ //sprawdza czy wektory sa sobie rowne
     return ((vector1.x == vector2.x) && (vector1.y == vector2.y));
-   
 }
 
 
