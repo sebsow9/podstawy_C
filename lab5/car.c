@@ -8,10 +8,11 @@
 struct Car{
     enum MapDirection orientation;
     struct Vector vector;
+    int index;
 };
 
-struct Car car(){
-    struct Car car_filled = {NORTH, (0,0)}; //funkcja pomocnicza do wywolywania struktury
+struct Car car(int i){
+    struct Car car_filled = {NORTH, {0,0}, i}; //funkcja pomocnicza do wywolywania struktury
     return car_filled;
 }
 
@@ -25,9 +26,9 @@ bool Car_isAt(struct Car car, struct Vector vector){ // sprawdzamy czy auto jest
     return ((car.vector.x == vector.x) && (car.vector.y == vector.y));
 }
 
-void Car_move(struct Car *car, enum MoveDirection direction){
+void Car_move(struct Car *car, enum MoveDirection direction, int M, int N){
     struct Vector border1 = {0, 0}; // granice naszego obszaru
-    struct Vector border2 = {4, 4};
+    struct Vector border2 = {M, N};
     switch(direction){ //sprawdzamy w jakim kieurnku chcemy poruszyc auto
         case RIGHT:
             car->orientation = MapDirection_next(car->orientation);
